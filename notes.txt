@@ -1,0 +1,16 @@
+
+
+TODO 
+---
+- SBM section 3: idf is used in query terms, not in doc weigths
+- BM25 - whole system; https://en.wikipedia.org/wiki/Okapi_BM25
+  - need to learn more core constants
+- To optimize:
+  - Use PAIRWISE rankings?
+    - Note: This exponentially increases the number of "pivots" because there's no P(ret) and P(rel) curves that cross anymore.
+  - Metrics (later): Old: precision, recall, f-score.  New: ROC, DCG and variants.
+  - Chapelle: Judgement metric for the contest was NDCG 
+- TODO: Finding threshold: n-fold cross validation?
+  - Probably just a param, like slope
+- TODO: Dump to .csv
+ 
