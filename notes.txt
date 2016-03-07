@@ -2,6 +2,11 @@
 
 TODO 
 ---
+- Implement TFIDF_Ranker.score / make into a Pipeline-able object
+- Note: cross-validation is just to reduce bias from holdout-style validation
+- Note that X_train isn't REALLY training data.  How to think about estimating slope?
+  - Is it a gradient descent?  Do I have to solve the update rule here?
+  - Or is it just generalized hpyerparameter estimation?
 - SBM section 3: idf is used in query terms, not in doc weigths
 - BM25 - whole system; https://en.wikipedia.org/wiki/Okapi_BM25
   - need to learn more core constants

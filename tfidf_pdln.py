@@ -94,8 +94,9 @@ class TFIDFRanker(object):
     return result
 
   def predict(self, queries, doc_indexes):
-    doc_results = self.get_documents_over_threshold(queries)
+    doc_results = self.get_documents_over_threshold(queries)  
     final_results = []
+    # Fettermania: TODD - there has to be a faster way
     for (doc_index, doc_result) in zip(doc_indexes, doc_results):
       final_results.append(1 if doc_index in doc_result.index else 0)
     return final_results

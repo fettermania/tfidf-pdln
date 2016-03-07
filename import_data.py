@@ -11,7 +11,7 @@ import clean_text
 
 
 def create_query_datasets_crowdflower(small=False):
-  df = pd.read_csv('./data/crowdflower.csv').dropna()
+  df = pd.read_csv('./data/crowdflower.csv').dropna().reset_index()
   if small:
     df = df[:100]  
   df['original_text'] = df['product_title'] + " " + df['product_description']

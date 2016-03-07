@@ -21,8 +21,8 @@ import plot_result_surface
 # normalization_corpus: Series (array-like)
 # input_docs: DF with "cleaned_text", "original text", "doc_index"
 # relevance results: DF: "cleaned_text", "original text", "doc index", "query", "relevant"
-(normalization_corpus, input_docs, relevance_results) = import_data.create_query_datasets_toy()
-#(normalization_corpus, input_docs, relevance_results) = import_data.create_query_datasets_crowdflower(small=True)
+#(normalization_corpus, input_docs, relevance_results) = import_data.create_query_datasets_toy()
+(normalization_corpus, input_docs, relevance_results) = import_data.create_query_datasets_crowdflower(small=True)
 
 X_train, X_test, y_train, y_test = train_test_split(
   relevance_results[['query', 'doc_index']], relevance_results['relevant'], test_size = .3, random_state=0)
@@ -61,6 +61,7 @@ def run_test(slope, threshold, X_array, y_array):
   print ("(DEBUG: %s) Run test: train = [a: %f, p: %f, r: %f, f: %f], slope=(%f), threshold=(%f)" % (
     datetime.datetime.now(), accuracy, precision, recall, fscore, slope, threshold))
   return (accuracy, precision, recall)
+
 accuracy_matrix = np.empty([THRESHOLD_POINTS, SLOPE_POINTS])
 precision_matrix = np.empty([THRESHOLD_POINTS, SLOPE_POINTS])
 recall_matrix = np.empty([THRESHOLD_POINTS, SLOPE_POINTS])
