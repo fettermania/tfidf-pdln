@@ -1,6 +1,7 @@
 from matplotlib import cm
 import matplotlib.pyplot as plt
 import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
 
 def plot_result_surface(z_label, result_matrix, THRESHOLD_MAX, THRESHOLD_POINTS, SLOPE_MAX, SLOPE_POINTS):
   fig = plt.figure()
