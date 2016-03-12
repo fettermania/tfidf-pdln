@@ -19,3 +19,24 @@ def plot_result_surface(z_label, result_matrix, THRESHOLD_MAX, THRESHOLD_POINTS,
   ax.set_zlim(np.min(result_matrix), np.max(result_matrix))
   fig.colorbar(surface, shrink=0.5, aspect=5)
   plt.show()
+
+
+def plot_1d_search_results(best_threshold, x_1, y_1, x_2, y_2):
+
+  fig, ax = plt.subplots(nrows=1, ncols=2)
+  plt1, plt2 = ax
+
+  # plot data
+  plt1.set_title("Accuracy vs. threshold, slope = 1")
+  plt1.plot(x_1, y_1)
+
+  plt1.set_xlabel('threshold')
+  plt1.set_ylabel('accuracy')
+
+  plt2.set_title("Accuracy vs. slope, threshold = %f" % (best_threshold))
+  plt2.plot(x_2, y_2)
+  plt2.set_xlabel('slope')
+  plt2.set_ylabel('accuracy')
+
+  plt.tight_layout()
+  plt.show()
