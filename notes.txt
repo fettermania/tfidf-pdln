@@ -2,8 +2,7 @@
 
 TODO 
 ---
-- Implement TFIDF_Ranker.score / make into a Pipeline-able object
-- Note: cross-validation is just to reduce bias from holdout-style validation
+- See if we can get n_jobs=2 or n_jobs=-1 to work.  
 - Note that X_train isn't REALLY training data.  How to think about estimating slope?
   - Is it a gradient descent?  Do I have to solve the update rule here?
   - Or is it just generalized hpyerparameter estimation?
@@ -15,7 +14,5 @@ TODO
     - Note: This exponentially increases the number of "pivots" because there's no P(ret) and P(rel) curves that cross anymore.
   - Metrics (later): Old: precision, recall, f-score.  New: ROC, DCG and variants.
   - Chapelle: Judgement metric for the contest was NDCG 
-- TODO: Finding threshold: n-fold cross validation?
-  - Probably just a param, like slope
 - TODO: Dump to .csv
  

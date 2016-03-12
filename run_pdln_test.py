@@ -1,6 +1,7 @@
 #run_pdln_test.py - main file
 
-# START HERE: http://stackoverflow.com/questions/28124366/can-gridsearchcv-be-used-with-a-custom-classifier
+#2016-03-11 23:27:02.364828: Run predict on (thr:0.147368, slo:0.827586)
+#Test score: 0.637719
 
 # SECTION : LOAD DATA
 import numpy as np
@@ -12,6 +13,9 @@ import tfidf_pdln
 import plot_results
 
 STRATEGY_RUN_FULL_2D = False
+CV = 3
+N_JOBS = 1 # Fettermaina TOOD: Why does N_JOBS = 2 hang?  
+
 
 # ===== SECTION: Get normalization_datadata and test/train set =====
 
@@ -19,10 +23,11 @@ STRATEGY_RUN_FULL_2D = False
 # input_docs: DF with "cleaned_text", "original text", "doc_index"
 # relevance results: DF: "cleaned_text", "original text", "doc index", "query", "relevant"
 #(normalization_corpus, input_docs, relevance_results) = import_data.create_query_datasets_toy()
-(normalization_corpus, input_docs, relevance_results) = import_data.create_query_datasets_crowdflower(small=True)
+(normalization_corpus, input_docs, relevance_results) = import_data.create_query_datasets_crowdflower(small=False)
 
 X_train, X_test, y_train, y_test = train_test_split(
   relevance_results[['query', 'doc_index']], relevance_results['relevant'], test_size = .3, random_state=0)
+
 
 # ====== SECTION: Create model =====
 from sklearn.grid_search import GridSearchCV
@@ -45,8 +50,8 @@ def run_full_2d_search():
     param_grid=param_grid, \
     #scoring='roc_auc', \
     scoring='accuracy', \
-    cv=10, \
-    n_jobs=-1)
+    cv=CV, \
+    n_jobs=N_JOBS)
 
   gs = gs.fit(X_train, y_train)
 
@@ -80,8 +85,8 @@ def run_two_step_search():
     param_grid=param_grid, \
     #scoring='roc_auc', \
     scoring='accuracy', \
-    cv=10, \
-    n_jobs=-1)
+    cv=CV, \
+    n_jobs=N_JOBS)
 
   gs = gs.fit(X_train, y_train)
   print('Best train score: %f at slope = %f, threshold: %f' % (gs.best_score_, gs.best_params_['pdln__slope'], gs.best_params_['pdln__relevance_threshold']))
@@ -98,12 +103,14 @@ def run_two_step_search():
     param_grid=param_grid, \
     #scoring='roc_auc', \
     scoring='accuracy', \
-    cv=10, \
-    n_jobs=-1)
+    cv=CV, \
+    n_jobs=N_JOBS)
   gs = gs.fit(X_train, y_train)
 
   optimal_slope_x = list(map(lambda x: x[0]['pdln__slope'], gs.grid_scores_))
   optimal_slope_y = list(map(lambda x: x[1], gs.grid_scores_))
+
+  print('Best train score: %f at slope = %f, threshold: %f' % (gs.best_score_, gs.best_params_['pdln__slope'], gs.best_params_['pdln__relevance_threshold']))
 
   plot_results.plot_1d_search_results(gs.best_params_['pdln__relevance_threshold'], optimal_threshold_x, optimal_threshold_y, optimal_slope_x, optimal_slope_y)
   (best_relevance_threshold, best_slope) = gs.best_params_['pdln__relevance_threshold'], gs.best_params_['pdln__slope']
@@ -111,10 +118,26 @@ def run_two_step_search():
 
 # === SECTION: Start model ===
 
+# Fettermania: Memory map
+# http://stackoverflow.com/questions/24406937/scikit-learn-joblib-bug-multiprocessing-pool-self-value-out-of-range-for-i-fo/24411581#24411581
+from sklearn.externals import joblib
+import os
+
+os.system("rm -f X_train.tmp* y_train.tmp*")
+
+joblib.dump(X_train, "./X_train.tmp")
+X_train = joblib.load("./X_train.tmp", mmap_mode='r+')
+
+joblib.dump(y_train, "./y_train.tmp")
+y_train = joblib.load("./y_train.tmp", mmap_mode='r+')
+
 if STRATEGY_RUN_FULL_2D:
   (best_relevance_threshold, best_slope) = run_full_2d_search()
 else:
   (best_relevance_threshold, best_slope) = run_two_step_search()
+
+os.system("rm -f X_train.tmp* y_train.tmp*")
+
 
 
 # === SECTION: Evaluate best model on test ===
