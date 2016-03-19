@@ -1,6 +1,5 @@
 #import_data.py
 
-# SECTION : LOAD DATA
 import pandas as pd
 import os
 import re
@@ -29,9 +28,6 @@ def create_query_datasets_crowdflower(small=False):
   df['doc_index'] = np.array(range(df.shape[0]))  # Fettermania TODO: This is not random-ish.
 
   return (df_normalization_sample['cleaned_text'], df[['cleaned_text', 'original_text', 'doc_index']], df)
-
-
- 
 
 def import_data_frame_toy():
   df = pd.DataFrame(np.array([

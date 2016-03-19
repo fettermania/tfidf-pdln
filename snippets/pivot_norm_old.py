@@ -14,7 +14,7 @@ import import_data
 
 # For now, just import one corpus and clean
 
-# ===== SECTION: Get normalization_datadata and test/train set =====
+# === SECTION: Get normalization_datadata and test/train set ===
 (normalization_corpus, dataset, relevance_results) = import_data.create_query_datasets()
 
 X_train, X_test, y_train, y_test = train_test_split(

@@ -2,7 +2,7 @@
 # # tfidf_ranker.add_normalization_corpus(normalization_corpus)
 # print ("DEBUG: Pivot is calculated at ", tfidf_ranker.pivot)
 
-# # ===== SECTION: Run test ======
+# # === SECTION: Run test ===
 # THRESHOLD_MAX = .4
 # THRESHOLD_POINTS = 20
 # SLOPE_MAX = 1.5
@@ -39,7 +39,7 @@
 #     precision_matrix[threshold_ix][slope_ix] = prec
 #     recall_matrix[threshold_ix][slope_ix] = rec
 
-# # ==== SECTION: Show results ======
+# # === SECTION: Show results ===
 # plot_result_surface.plot_result_surface("Accuracy", accuracy_matrix, THRESHOLD_MAX, THRESHOLD_POINTS, SLOPE_MAX, SLOPE_POINTS)
 # plot_result_surface.plot_result_surface("Precision", precision_matrix, THRESHOLD_MAX, THRESHOLD_POINTS, SLOPE_MAX, SLOPE_POINTS)
 # plot_result_surface.plot_result_surface("Recall", recall_matrix, THRESHOLD_MAX, THRESHOLD_POINTS, SLOPE_MAX, SLOPE_POINTS)

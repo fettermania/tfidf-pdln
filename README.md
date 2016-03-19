@@ -28,6 +28,32 @@ Considerations
 
 - More things to consider in docs/notes.txt
 
+TODO
+---
+
+
+TODO 
+---
+- Remove static class variables in classifier class
+- Try RandomizedSearchCV instead of GridSearchCV
+- See if we can get n_jobs=2 or n_jobs=-1 to work on large dataset 
+- SBM section 3: idf is used in query terms, not in doc weigths
+- To optimize:
+  - Use PAIRWISE rankings?
+    - Note: This exponentially increases the number of "pivots" because there's no P(ret) and P(rel) curves that cross anymore.
+  - Metrics (later): Old: precision, recall, f-score.  New: ROC, DCG and variants.
+  - Chapelle: Judgement metric for the contest was NDCG 
+- TODO: Dump to .csv
+ 
+
+
+NOtes
+---
+- Memory map:  # http://stackoverflow.com/questions/24406937/scikit-learn-joblib-bug-multiprocessing-pool-self-value-out-of-range-for-i-fo/24411581#24411581
+- BM25 - whole system; https://en.wikipedia.org/wiki/Okapi_BM25
+  - need to learn more core constants
+
+
 
 
 
