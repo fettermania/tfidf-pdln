@@ -22,18 +22,16 @@ Results
 ---
 - results/crowdflower_results_large.png
   - Note: currently segfaults on full 2d search
-  - Dummy "guess clss 1" strategy gives 58% accuracy. TFIDF improves to 64%.
+  - On the most accurate (65%) parameters in training, the model still has very low precision (64%), though high recall (90%).  This is clear since it predicts something like 82% of results to be positive, the main issue.  
+  - Dummy "guess clss 1" strategy gives 61% accuracy. TFIDF improves to 64%.
   - Slope doesn't seem to have a major effect, though it does add most accuracy in the range suggested by SBM (around .8)
-  - TODO: investigate recall, precision.
 - results/crowdflower_results_small.png
   - Suggests the nested 1d strategy is sensible.
   
-
 Considerations
 ---
 - Crowdflower data: Right now, we are looking at accuracy of "relevance" (crowdflower "relevance score" == 4 means "relevant retrieval", else "irrelevant retrieval").  Probably better to learn this function (range: 0-4) than collapse into a binary classification.  This probably causes a lot of the problems in the model.
-- The sparseness of the model also is problematic.  TODO investigate.
-
+- Also, the notion that one threshold determines "relevance" might be misapplied.
 
 
 TODO 

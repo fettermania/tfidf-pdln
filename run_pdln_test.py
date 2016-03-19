@@ -59,7 +59,7 @@ def run_full_2d_search(input_args, data_args, cv, result_metric, n_jobs, verbose
     results_matrix[i_thr][i_slo] = mean
   plot_results.plot_result_surface(result_metric, results_matrix, THRESHOLD_MAX, THRESHOLD_POINTS, SLOPE_MAX, SLOPE_POINTS)
   (best_relevance_threshold, best_slope) = gs.best_params_['pdln__relevance_threshold'], gs.best_params_['pdln__slope']
-  return (best_relevance_threshold, best_slope)
+  return (gs.best_score_, best_relevance_threshold, best_slope)
 
 # === STRATEGY 2: Find optimal threshold, then slope ===
 def run_two_step_search(input_args, data_args, cv, result_metric, n_jobs, verbose):
@@ -99,11 +99,10 @@ def run_two_step_search(input_args, data_args, cv, result_metric, n_jobs, verbos
   slope_scores_x = list(map(lambda x: x[0]['pdln__slope'], gs.grid_scores_))
   slope_scores_y = list(map(lambda x: x[1], gs.grid_scores_))
 
-  print('Best train score (%s): %f at slope = %f, threshold: %f' % (result_metric, gs.best_score_, gs.best_params_['pdln__slope'], gs.best_params_['pdln__relevance_threshold']))
 
   plot_results.plot_1d_search_results(result_metric, gs.best_params_['pdln__relevance_threshold'], threshold_scores_x, threshold_scores_y, slope_scores_x, slope_scores_y)
   (best_relevance_threshold, best_slope) = gs.best_params_['pdln__relevance_threshold'], gs.best_params_['pdln__slope']
-  return (best_relevance_threshold, best_slope)
+  return (gs.best_score_, best_relevance_threshold, best_slope)
 
 
 
@@ -137,23 +136,40 @@ def run_pdln_test(cv, dataset, result_metric, n_jobs, full2d, verbose):
 
   try:
     if full2d:
-      (best_relevance_threshold, best_slope) = run_full_2d_search(input_args, data_args, cv, result_metric, n_jobs, verbose)
+      (best_score, best_relevance_threshold, best_slope) = run_full_2d_search(input_args, data_args, cv, result_metric, n_jobs, verbose)
     else:
-      (best_relevance_threshold, best_slope) = run_two_step_search(input_args, data_args, cv, result_metric, n_jobs, verbose)
+      (best_score, best_relevance_threshold, best_slope) = run_two_step_search(input_args, data_args, cv, result_metric, n_jobs, verbose)
   finally:
     os.system("rm -f X_train.tmp* y_train.tmp*")
 
 
 
-  # === Evaluate best model on test ===
   # Note: This doesn't give access to PDLNClassifier directly.
   #pdln_classifier = gs.best_estimator_.fit(X_train, y_train)
   classifier = pdln_classifier.PDLNClassifier(normalization_corpus, input_docs, relevance_threshold=best_relevance_threshold, slope=best_slope)
+
+
+  from sklearn.metrics import confusion_matrix
+  y_pred = classifier.predict(X_train)
+  confmat = confusion_matrix(y_true=y_train, y_pred=y_pred)
+  print("Training confusion matrix:\n")
+  print(confmat)
+
+  # === Evaluate best model on test ===
   test_score =  getattr(sklearn.metrics, result_metric + "_score")(
     classifier.predict(X_test),
     y_test)
 
+
+  y_pred = classifier.predict(X_test)
+  confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+  print("Test confusion matrix:\n")
+  print(confmat)
+
   print('Test score (%s) at threshold=%f, slope=%f: %f' % (result_metric, best_relevance_threshold, best_slope, test_score))
+
+
+
 
 
   # === DEBUG/play section ===
