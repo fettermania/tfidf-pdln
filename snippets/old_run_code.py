@@ -1,4 +1,4 @@
-# # tfidf_ranker = tfidf_pdln.TFIDFRanker(input_docs=input_docs, normalization_corpus=normalization_corpus, slope=.75, relevance_threshold=.05)
+# # tfidf_ranker = pdln_classifier.TFIDFRanker(input_docs=input_docs, normalization_corpus=normalization_corpus, slope=.75, relevance_threshold=.05)
 # # tfidf_ranker.add_normalization_corpus(normalization_corpus)
 # print ("DEBUG: Pivot is calculated at ", tfidf_ranker.pivot)
 

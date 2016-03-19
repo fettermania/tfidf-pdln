@@ -14,7 +14,7 @@ from sklearn.pipeline import Pipeline
 
 # Fettermania libraries
 import import_data
-import tfidf_pdln
+import pdln_classifier
 import plot_results
 
 
@@ -30,7 +30,7 @@ def run_full_2d_search(input_args, data_args, cv, result_metric, n_jobs, verbose
   (X_train, X_test, y_train, y_test) = data_args
 
   # === Create pipeline ===
-  pipe_pdln = Pipeline([('pdln', tfidf_pdln.PDLNClassifier(normalization_corpus, input_docs, verbose=verbose))])
+  pipe_pdln = Pipeline([('pdln', pdln_classifier.PDLNClassifier(normalization_corpus, input_docs, verbose=verbose))])
   param_threshold_range = np.linspace(0, THRESHOLD_MAX, THRESHOLD_POINTS)
   param_slope_range = np.linspace(0, SLOPE_MAX, SLOPE_POINTS)
   param_grid = [{'pdln__relevance_threshold': param_threshold_range, 'pdln__slope': param_slope_range}]
@@ -67,7 +67,7 @@ def run_two_step_search(input_args, data_args, cv, result_metric, n_jobs, verbos
   (X_train, X_test, y_train, y_test) = data_args
 
   # === Search for best threshold fit given fixed slope=1 ===
-  pipe_pdln = Pipeline([('pdln', tfidf_pdln.PDLNClassifier(normalization_corpus, input_docs, verbose=verbose))])
+  pipe_pdln = Pipeline([('pdln', pdln_classifier.PDLNClassifier(normalization_corpus, input_docs, verbose=verbose))])
   param_threshold_range = np.linspace(0, THRESHOLD_MAX, THRESHOLD_POINTS)
   param_grid = [{'pdln__relevance_threshold': param_threshold_range, 'pdln__slope': [1.0]}]
 
@@ -148,9 +148,9 @@ def run_pdln_test(cv, dataset, result_metric, n_jobs, full2d, verbose):
   # === Evaluate best model on test ===
   # Note: This doesn't give access to PDLNClassifier directly.
   #pdln_classifier = gs.best_estimator_.fit(X_train, y_train)
-  pdln_classifier = tfidf_pdln.PDLNClassifier(normalization_corpus, input_docs, relevance_threshold=best_relevance_threshold, slope=best_slope)
+  classifier = pdln_classifier.PDLNClassifier(normalization_corpus, input_docs, relevance_threshold=best_relevance_threshold, slope=best_slope)
   test_score =  getattr(sklearn.metrics, result_metric + "_score")(
-    pdln_classifier.predict(X_test),
+    classifier.predict(X_test),
     y_test)
 
   print('Test score (%s) at threshold=%f, slope=%f: %f' % (result_metric, best_relevance_threshold, best_slope, test_score))
@@ -159,8 +159,8 @@ def run_pdln_test(cv, dataset, result_metric, n_jobs, full2d, verbose):
   # === DEBUG/play section ===
   # print ("DEBUG QUERIES")
   # debug_queries = np.array(['cat', 'cat dog', 'felid', 'and', 'fasdf'])
-  # print(list(zip(debug_queries, pdln_classifier.get_top_document_matches(debug_queries, 3))))
-  # print(list(zip(debug_queries, pdln_classifier.get_documents_over_threshold(debug_queries))))
+  # print(list(zip(debug_queries, classifier.get_top_document_matches(debug_queries, 3))))
+  # print(list(zip(debug_queries, classifier.get_documents_over_threshold(debug_queries))))
 
 
 
